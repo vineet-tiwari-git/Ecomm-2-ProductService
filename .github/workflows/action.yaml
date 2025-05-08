@@ -4,6 +4,11 @@ name: CI for Product Service
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+      - .github/workflows/**
+      - README.md
+      - .gitignore
+      - k8s/**
   pull_request:
     branches: [ "master" ]
 
@@ -23,10 +28,21 @@ jobs:
     
         - name: Build with Maven
           run: mvn -B package --file pom.xml -Dmaven.test.skip
-
-    docker:
+    
+    code_quality:
         runs-on: ubuntu-latest
         needs: build
+
+        steps:
+        - name: Checkout code
+          uses: actions/Checkout@v4
+    
+        - name: Run Codacy Analysis CLI
+          uses: codacy/codacy-analysis-cli-action@master    
+    
+    docker:
+        runs-on: ubuntu-latest
+        needs: [build,code_quality]
 
         steps:
         - name: Checkout code
@@ -47,5 +63,5 @@ jobs:
                 context: .
                 file: Dockerfile
                 push: true
-                tags: ${{ secrets.DOCKER_USERNAME }}/ecomm-2-product-service:latest
+                tags: ${{ secrets.DOCKER_USERNAME }}/ecomm-v2-productservice:latest
     
