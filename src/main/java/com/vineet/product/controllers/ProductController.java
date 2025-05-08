@@ -24,6 +24,11 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "Hello World!";
+    }
+
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable String id) {
         Product product = productService.getProductById(id);
