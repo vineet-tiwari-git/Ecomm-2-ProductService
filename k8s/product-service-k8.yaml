@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+spec:
+  selector:
+    app: ecomm-product
+  ports:
+    - name: product-service-port
+      port: 8081
+      targetPort: 8081
+      nodePort: 31001
+  type: NodePort
+  
